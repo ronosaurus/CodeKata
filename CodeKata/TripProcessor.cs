@@ -7,11 +7,16 @@ using log4net;
 namespace CodeKata
 {
     /// <summary>
-    /// Processes a file for Driver and Trip commands to produce a report based on driver.
+    /// Processes Driver and Trip commands to produce a report based on driver.
     /// </summary>
     public class TripProcessor{
         private static readonly ILog Log = LogManager.GetLogger(typeof(TripProcessor));
 
+        /// <summary>
+        /// Processes input file for Driver and Trip commands
+        /// </summary>
+        /// <exception cref="ArgumentNullException">Thrown when input file is null</exception>
+        /// <exception cref="InvalidDataException">Thrown when input file contains malformed records that prevent report from being generated</exception>
         public TripResult Process(string file)
         {
             var fileInfo = new FileInfo(file); // throws ArgumentNullException
@@ -27,7 +32,11 @@ namespace CodeKata
             }
         }
 
-        // design decision: no catch block because the report will be inaccurate if a bad row is encountered
+        /// <summary>
+        /// Processes text stream for Driver and Trip commands
+        /// </summary>
+        /// <exception cref="ArgumentNullException">Thrown when input stream is null</exception>
+        /// <exception cref="InvalidDataException">Thrown when input stream contains malformed records that prevent report from being generated</exception>
         public TripResult Process(Stream file)
         {
             if (file == null)
@@ -76,6 +85,7 @@ namespace CodeKata
             int lineCount = 0;
             using (var sr = new StreamReader(file))
             {
+                // design decision: no catch block to continue processing because the report will be inaccurate if a bad row is encountered
                 while (sr.EndOfStream == false)
                 {
                     lineCount++;
