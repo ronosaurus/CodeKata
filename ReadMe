@@ -1,0 +1,17 @@
+I choose not to design the system like this:
+
+  TripProcessor
+    IParser with string.Split or https://www.nuget.org/packages/CsvHelper implementations
+    IFilter to handle the <5 or >100 mph logic
+    IReportGenerator for report formatting
+
+because the requirements didn't mention additional data sources, large input, etc. The business 
+requirements were focused on the report output and made certain assumptions about the file usually
+being well formatted so I focused on the integrity of the report. I made a design decision that if
+anything in the file is wrong report integrity would compromised so an error is thrown to prevent
+a partial report. There didn't seem to be a reason to async/await so I avoided that complexity too.
+
+Supporting both a file path and stream for input allowed test cases to be written without having to
+manage many small files. Stream also offers an extension point if this is used in a larger project.
+
+Code has a few in-line "design decision" and "code review" comments.
