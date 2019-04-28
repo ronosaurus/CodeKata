@@ -28,7 +28,7 @@ namespace CodeKata.Test
                 Trip Dan 07:15 07:45 17.3
                 Trip Dan 06:12 06:32 21.8
                 Trip Alex 12:01 13:16 42.0",
-                output:
+                expectedOutput:
                 @"Alex: 42 miles @ 34 mph
                 Dan: 39 miles @ 47 mph
                 Bob: 0 miles");
@@ -95,7 +95,7 @@ namespace CodeKata.Test
                 Trip Alex 08:15 09:15 110
                 Trip Alex 09:15 10:15 10
                 Trip Dan 07:00 08:00 42.0",
-                output:
+                expectedOutput:
                 @"Dan: 42 miles @ 42 mph
                 Alex: 20 miles @ 10 mph");
         }
@@ -111,7 +111,7 @@ namespace CodeKata.Test
                 Trip Alex 08:15 09:15 2
                 Trip Alex 09:15 10:15 10
                 Trip Dan 07:00 08:00 42.0",
-                output:
+                expectedOutput:
                 @"Dan: 42 miles @ 42 mph
                 Alex: 20 miles @ 10 mph");
         }
@@ -123,7 +123,7 @@ namespace CodeKata.Test
                 input:
                 @"Driver Alex
                 Trip Alex 07:15 07:16 0.1",
-                output: // 0.1 miles * 60 minutes = 6 mph
+                expectedOutput: // 0.1 miles * 60 minutes = 6 mph
                 @"Alex: 0 miles @ 6 mph");
         }
 
@@ -134,7 +134,7 @@ namespace CodeKata.Test
                 input: // 16 hour drive at 60 mph = 960 miles
                 @"Driver Alex
                 Trip Alex 07:00 23:00 960",
-                output:
+                expectedOutput:
                 @"Alex: 960 miles @ 60 mph");
         }
 
@@ -148,7 +148,7 @@ namespace CodeKata.Test
                 Trip Dan 07:15 08:15 50
                 Trip Dan 09:15 10:15 100
                 Trip Alex 07:15 08:15 50",
-                output:
+                expectedOutput:
                 @"Dan: 150 miles @ 75 mph
                 Alex: 50 miles @ 50 mph");
         }
@@ -166,21 +166,21 @@ namespace CodeKata.Test
                 input:
                 @"Driver Dan
                 Trip Dan 07:15 08:15 17.1",
-                output:
+                expectedOutput:
                 @"Dan: 17 miles @ 17 mph");
 
             ProcessAndAssertReport( // .0 no rounding
                 input:
                 @"Driver Dan
                 Trip Dan 07:15 08:15 17.0",
-                output:
+                expectedOutput:
                 @"Dan: 17 miles @ 17 mph");
 
             ProcessAndAssertReport( // no rounding
                 input:
                 @"Driver Dan
                 Trip Dan 07:15 08:15 17",
-                output:
+                expectedOutput:
                 @"Dan: 17 miles @ 17 mph");
         }
 
@@ -191,21 +191,21 @@ namespace CodeKata.Test
                 input:
                 @"Driver Dan
                 Trip Dan 07:15 08:15 17.9",
-                output:
+                expectedOutput:
                 @"Dan: 18 miles @ 18 mph");
 
             ProcessAndAssertReport( // .5 rounds up
                 input:
                 @"Driver Dan
                 Trip Dan 07:15 08:15 17.5",
-                output:
+                expectedOutput:
                 @"Dan: 18 miles @ 18 mph");
         }
 
-        private void ProcessAndAssertReport(string input, string output)
+        private void ProcessAndAssertReport(string input, string expectedOutput)
         {
             var result = Process(input);
-            Assert.AreEqual(Trim(output), result.ToReport().TrimEnd());
+            Assert.AreEqual(Trim(expectedOutput), result.ToReport().TrimEnd());
         }
     }
 }
