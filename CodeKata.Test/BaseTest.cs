@@ -1,26 +1,37 @@
 ﻿using System;
-using System.IO;
+using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using CodeKata.Filters;
+using CodeKata.Parsers;
 
 namespace CodeKata.Test
 {
     public abstract class BaseTest
     {
-        protected TripResult Process(string value)
+        protected TripResult Process(string value, params IFilter<Trip>[] filters)
         {
-            using (var ms = new MemoryStream(Encoding.Default.GetBytes(Trim(value))))
-            {
-                TripProcessor processor = new TripProcessor();
-                return processor.Process(ms);
-            }
+            var trimmed = AsEnumerable(value).Select(l => l.Trim());
+            var parser = new StringSplitTripParser(trimmed, filters);
+            return new TripProcessor(parser).Process();
+        }
+
+        // test helper, doesn't need to be efficient
+        protected IEnumerable<string> AsEnumerable(string value)
+        {
+            return value.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).AsEnumerable();
+        }
+
+        // test helper, doesn't need to be efficient
+        protected IEnumerable<string> AsEnumerableTrim(string value)
+        {
+            return AsEnumerable(value).Select(l => l.Trim());
         }
 
         // test helper, doesn't need to be efficient
         protected string Trim(string value)
         {
             // https://stackoverflow.com/questions/14205645/how-to-trim-a-multi-line-string
-            return string.Join(Environment.NewLine, value.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).AsEnumerable().Select(l => l.Trim()));
+            return string.Join(Environment.NewLine, AsEnumerable(value).Select(l => l.Trim()));
         }
     }
 }

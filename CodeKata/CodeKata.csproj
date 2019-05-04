@@ -41,15 +41,22 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Parsers\BaseFilteringParser.cs" />
+    <Compile Include="Parsers\StringSplitTripParser.cs" />
+    <Compile Include="Parsers\ITripParser.cs" />
+    <Compile Include="Filters\IFilter.cs" />
+    <Compile Include="Filters\MinMaxMilesPerHour.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Trip.cs" />
     <Compile Include="TripProcessor.cs" />
+    <Compile Include="TripProcessorFactory.cs" />
     <Compile Include="TripResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

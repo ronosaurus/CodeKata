@@ -43,10 +43,11 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseTest.cs" />
+    <Compile Include="MinMaxMilesPerHourTests.cs" />
+    <Compile Include="StringSplitTripParsersTests.cs" />
     <Compile Include="TripProcessorTests.cs" />
     <Compile Include="TripResultTests.cs" />
     <Compile Include="TripTests.cs" />

@@ -13,7 +13,7 @@ namespace CodeKata
             appender.ActivateOptions();
             // BasicConfigurator.Configure(appender);
 
-            var result = new TripProcessor().Process(@"..\\..\\..\\ExampleInput.txt");
+            var result = TripProcessorFactory.CreateWithMinMaxFilter(@"..\\..\\..\\ExampleInput.txt", 5, 100).Process();
             Console.WriteLine(result.ToReport());
 
             Console.WriteLine("Finished running CodeKata.Program.Main...");

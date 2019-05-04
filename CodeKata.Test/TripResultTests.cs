@@ -24,11 +24,11 @@ namespace CodeKata.Test
             Assert.AreEqual(60, total.MilesPerHour);
         }
 
-        [Test] [Ignore("TODO: need to figure out to syntax for delta")]
+        [Test]
         public void very_slow()
         {
-            TripResult.TripTotal total = new TripResult.TripTotal { Driver = "Ron", Miles = 0.0001m, Hours = 10 };
-            Assert.AreEqual(0.0001m * 10, total.MilesPerHour);
+            TripResult.TripTotal total = new TripResult.TripTotal { Driver = "Ron", Miles = 1, Hours = 10 };
+            Assert.AreEqual(1/(decimal)10, total.MilesPerHour);
         }
     }
 }

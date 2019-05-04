@@ -1,4 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using CodeKata.Filters;
+using CodeKata.Parsers;
 using log4net.Appender;
 using log4net.Config;
 using log4net.Layout;
@@ -35,21 +40,9 @@ namespace CodeKata.Test
         }
 
         [Test]
-        public void invalid_file()
+        public void null_parser()
         {
-            Assert.That(() => new TripProcessor().Process("file does not exist"), Throws.ArgumentException);
-        }
-
-        [Test]
-        public void null_path()
-        {
-            Assert.That(() => new TripProcessor().Process((string)null), Throws.ArgumentNullException);
-        }
-
-        [Test]
-        public void null_stream()
-        {
-            Assert.That(() => new TripProcessor().Process((Stream)null), Throws.ArgumentNullException);
+            Assert.That(() => new TripProcessor(null).Process(), Throws.ArgumentNullException);
         }
 
         [Test] // fun with C# 7 local functions!
@@ -202,9 +195,58 @@ namespace CodeKata.Test
                 @"Dan: 18 miles @ 18 mph");
         }
 
+        [Test] // make sure the general design works ok with things other than StringSplitTripParser
+        public void alternate_implementation()
+        {
+            /*
+                Driver Dan
+                Driver Alex
+                Driver Bob
+                Trip Dan 07:15 07:45 17.3
+                Trip Dan 06:12 06:32 21.8
+                Trip Alex 12:01 13:16 42.0
+            */
+            var expected = Trim(@"
+                Alex: 42 miles @ 34 mph
+                Dan: 39 miles @ 47 mph
+                Bob: 0 miles");
+
+            var filter = new MinMaxMilesPerHour(5, 100);
+            AltTripParser parser = new AltTripParser(filter)
+            {
+                AltDrivers = {"Dan", "Alex", "Bob"},
+                AltTrips =
+                {
+                    new Trip("Dan", "07:15", "07:45", 17.3m),
+                    new Trip("Dan", "06:12", "06:32", 21.8m),
+                    new Trip("Alex", "12:01", "13:16", 42.0m)
+                }
+            };
+            var actual = new TripProcessor(parser).Process().ToReport().TrimEnd();
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        private class AltTripParser : BaseFilteringParser
+        {
+            public HashSet<string> AltDrivers { get; } = new HashSet<string>();
+            public List<Trip> AltTrips { get; } = new List<Trip>();
+
+            public AltTripParser(params IFilter<Trip>[] tripFilters) : base(tripFilters)
+            {
+                // empty
+            }
+
+            protected override void Parse()
+            {
+                AltDrivers.ToList().ForEach(AddDriver);
+                AltTrips.ForEach(AddTrip);
+            }
+        }
+
         private void ProcessAndAssertReport(string input, string expectedOutput)
         {
-            var result = Process(input);
+            var result = Process(input, new MinMaxMilesPerHour(5, 100));
             Assert.AreEqual(Trim(expectedOutput), result.ToReport().TrimEnd());
         }
     }
