@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using CodeKata.Filters;
 
 namespace CodeKata.Parsers
@@ -7,15 +7,13 @@ namespace CodeKata.Parsers
     // code review: not sure if this should be base class or wrap an implementation; goal was to filter during first pass
     public abstract class BaseFilteringParser : ITripParser
     {
-        protected HashSet<string> Drivers = new HashSet<string>();
-        protected List<Trip> Trips = new List<Trip>();
+        private readonly ISet<string> _drivers = new HashSet<string>();
+        private readonly IList<Trip> _trips = new List<Trip>();
 
-        // https://stackoverflow.com/questions/2550892/design-patterns-recommendation-for-filtering-option
-        // https://gist.github.com/craigles/8553239
-        protected readonly IFilter<Trip>[] TripFilters;
-        protected readonly IFilter<string>[] DriverFilters;
+        protected readonly IEnumerable<IFilter<Trip>> TripFilters;
+        protected readonly IEnumerable<IFilter<string>> DriverFilters;
 
-        protected BaseFilteringParser(IFilter<Trip>[] tripFilters, IFilter<string>[] driverFilters = null)
+        protected BaseFilteringParser(IEnumerable<IFilter<Trip>> tripFilters = null, IEnumerable<IFilter<string>> driverFilters = null)
         {
             TripFilters = tripFilters;
             DriverFilters = driverFilters;
@@ -24,8 +22,8 @@ namespace CodeKata.Parsers
         public void Parse(out ISet<string> drivers, out IList<Trip> trips)
         {
             Parse();
-            drivers = Drivers;
-            trips = Trips;
+            drivers = _drivers;
+            trips = _trips;
         }
 
         protected abstract void Parse();
@@ -34,7 +32,7 @@ namespace CodeKata.Parsers
         {
             if (Match(DriverFilters, driver))
             {
-                Drivers.Add(driver);
+                _drivers.Add(driver);
             }
         }
 
@@ -42,13 +40,13 @@ namespace CodeKata.Parsers
         {
             if (Match(TripFilters, trip))
             {
-                Trips.Add(trip);
+                _trips.Add(trip);
             }
         }
 
-        private bool Match<T>(IFilter<T>[] array, T item)
+        private bool Match<T>(IEnumerable<IFilter<T>> items, T item)
         {
-            return array == null || Array.TrueForAll(array, x => x.Match(item));
+            return items == null || items.All(x => x.Match(item));
         }
     }
 }

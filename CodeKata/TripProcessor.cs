@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using CodeKata.Parsers;
 using log4net;
@@ -22,7 +21,6 @@ namespace CodeKata
         
         public TripResult Process()
         {
-            // if requirements specific a slightly different data format we could have yielded each item
             _parser.Parse(out var drivers, out var trips);
 
             var result = new TripResult();

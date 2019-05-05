@@ -9,6 +9,13 @@ namespace CodeKata.Filters
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(MinMaxMilesPerHour));
 
+        /*
+        /// <summary>
+        /// Min=5, Max=100
+        /// </summary>
+        public static MinMaxMilesPerHour Default { get; } = new MinMaxMilesPerHour(5, 100);
+        */
+
         private readonly int _min;
         private readonly int _max;
 

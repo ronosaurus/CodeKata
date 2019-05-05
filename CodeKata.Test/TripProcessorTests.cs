@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CodeKata.Filters;
@@ -214,8 +213,8 @@ namespace CodeKata.Test
             var filter = new MinMaxMilesPerHour(5, 100);
             AltTripParser parser = new AltTripParser(filter)
             {
-                AltDrivers = {"Dan", "Alex", "Bob"},
-                AltTrips =
+                Drivers = {"Dan", "Alex", "Bob"},
+                Trips =
                 {
                     new Trip("Dan", "07:15", "07:45", 17.3m),
                     new Trip("Dan", "06:12", "06:32", 21.8m),
@@ -229,8 +228,8 @@ namespace CodeKata.Test
 
         private class AltTripParser : BaseFilteringParser
         {
-            public HashSet<string> AltDrivers { get; } = new HashSet<string>();
-            public List<Trip> AltTrips { get; } = new List<Trip>();
+            public HashSet<string> Drivers { get; } = new HashSet<string>();
+            public List<Trip> Trips { get; } = new List<Trip>();
 
             public AltTripParser(params IFilter<Trip>[] tripFilters) : base(tripFilters)
             {
@@ -239,8 +238,8 @@ namespace CodeKata.Test
 
             protected override void Parse()
             {
-                AltDrivers.ToList().ForEach(AddDriver);
-                AltTrips.ForEach(AddTrip);
+                Drivers.ToList().ForEach(AddDriver);
+                Trips.ForEach(AddTrip);
             }
         }
 
